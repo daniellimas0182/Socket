@@ -1,0 +1,81 @@
+html, body {
+    height: 100%;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  #chat {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  /* input {
+    width: 600px;
+    border: 1px solid #ddd;
+    height: 50px;
+    padding: 0 20px;
+    font-size: 14px;
+  } */
+  
+  /* button {
+    width: 600px;
+    height: 50px;
+    font-size: 14px;
+    background: #069;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    color: #FFF;
+    margin-top: 10px;
+  } */
+  
+  .messages {
+    width: 600px;
+    height: 400px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    padding: 20px;
+    background-color: white;
+  }
+
+  .bd{
+    background: rgb(235, 235, 235);
+  }
+     .upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+   display: inline-block; 
+} 
+  
+  .btn {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  left: 1000px;
+}
+
+  .upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute; 
+  left: 50px;
+  top: 0;
+  opacity: 0;
+} 
+
+.imagem img {
+  max-width:200px;
+  max-height:150px;
+  width: auto;
+  height: auto;
+}
