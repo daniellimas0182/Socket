@@ -24,7 +24,7 @@
         <form id="chat" class="upload-btn-wrapper">
 
             <button id="btn-file" class="btn">Enviar um arquivo</button>
-            <input type="file" id="inp-file" name="myfile" />
+            <input type="file" id="inp-file" name="myfile" onchange='openFile(event)' />
             <!-- <input type="text" name="username" placeholder="Digite seu usuário"> -->
             <div class="messages"></div>
             <!-- <input type="text" name="message" placeholder="Digite sua mensagem">
@@ -36,11 +36,32 @@
         <script type="text/javascript">
             var socket = io('http://localhost:3000');
 
+            var openFile = function (event) {
+                var input = event.target;
+
+                var reader = new FileReader();
+
+                function isLetter(str) {
+                    return str.length === 1 && str.match(/[a-z]/i);
+                }
+                var numCaracter = 0;
+                reader.onload = function () {
+                    var text = reader.result;
+                    for (var i = 0; i < text.length; i++) {
+
+                        if (isLetter(text.charAt(i))) {
+                            numCaracter++;
+                        }
+                    }
+                    console.log(numCaracter);
+                };
+                reader.readAsText(input.files[0]);
+            };
 
             function renderMessage(message) {
                 $('.messages').append('<div class="message"><strong>' + message.author + '</strong>: ' + message.message + ' </div>');
             }
- 
+
             socket.on('previousMessages', function (messages) {
                 for (message of messages) {
                     renderMessage(message);
@@ -63,9 +84,9 @@
                         message: message,
                     };
 
-                     renderMessage(messageObject); 
+                    renderMessage(messageObject);
 
-                     socket.emit('sendMessage', messageObject); 
+                    socket.emit('sendMessage', messageObject);
                 }
             });
         </script>
