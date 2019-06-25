@@ -15,17 +15,15 @@
 
 <body class="bd">
 
-    <form id="chat" class="upload-btn-wrapper">
+    <form id="tela" class="upload-btn-wrapper" >
 
         <div class="imagem" style="text-align:center">
             <img src="imagem/upload.png" />
         </div>
 
         <button id="btn-file" class="btn">Carregar arquivo</button>
-        <input type="file" id="inp-file" name="myfile" onchange='openFile(event)' />
-        <!-- <input type="text" name="username" placeholder="Digite seu usuário"> -->
-        <div class="messages"></div>
-        <!-- <input type="text" name="message" placeholder="Digite sua mensagem"> -->
+        <input type="file" id="inp-file" name="myfile" onchange='abrirArquivo(event)' />
+        <div class="messages" ></div>
         <button type="submit">Enviar</button> 
 
     </form>
@@ -35,13 +33,13 @@
         var socket = io('http://localhost:3000');
         numCaracter = 0;
 
-        var openFile = function (event) {
+        var abrirArquivo = function (event) {
             var input = event.target;
 
             var reader = new FileReader();
 
             function isLetter(str) {
-                return str.length === 1 && str.match(/[a-z0-9]/i);
+                return str.length === 1 && str.match(/[a-z0-9!#$%&'()*+,-./:;´?@[\\\]_`{|}~]/i);
             }
 
             reader.onload = function () {
@@ -52,13 +50,13 @@
                         numCaracter++;
                     }
                 }
-                console.log(numCaracter);
             };
             reader.readAsText(input.files[0]);
         };
 
         function renderMessage(message) {
-            $('.messages').append('<div class="message"><strong>' + message.nomeDoArquivo + '</strong>: ' + message.numCaracter + ' </div>');
+            $('.messages').append('<div class="message"><strong > Caminho até o arquivo: </strong>' + message.nomeDoArquivo + '<br><strong> Número de caracteres: </strong> ' + message.numCaracter + ' </div><br>');
+
         }
 
         socket.on('previousMessages', function (messages) {
@@ -71,29 +69,20 @@
             renderMessage(message);
         });
 
-        $('#chat').submit(function (event) {
+        $('#tela').submit(function (event) {
             event.preventDefault();
 
             var nomeDoArquivo = $("#inp-file").val();
-
-            /* var author = $('input[name=username]').val();
-            var message = $('input[name=message]').val(); */
-            console.log(nomeDoArquivo.length);
-            console.log(numCaracter.length);
-
-              if (nomeDoArquivo.length && numCaracter.length) {  
-                var messageObject = {
+              
+                var arquivoObject = {
                     nomeDoArquivo: nomeDoArquivo,
                     numCaracter: numCaracter,
-
-                    /* author: author,
-                    message: message, */
                 };
 
-                renderMessage(messageObject);
+                renderMessage(arquivoObject);
 
-                socket.emit('sendMessage', messageObject);
-            }
+                socket.emit('sendMessage', arquivoObject);
+            
           }  );
     </script>
 </body>

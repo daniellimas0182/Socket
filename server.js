@@ -18,7 +18,6 @@ app.use('/', (req, res) => {
 
 
 io.on('connection', socket => {
-    console.log(`Socket conectado: ${socket.id}`);
 
      socket.emit('previousMessages', messages); 
 

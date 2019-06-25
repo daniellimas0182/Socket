@@ -8,7 +8,7 @@ html, body {
     box-sizing: border-box;
   }
   
-  #chat {
+  #tela {
     height: 100%;
     display: flex;
     justify-content: center;
@@ -38,11 +38,12 @@ html, body {
   
   .messages {
     width: 600px;
-    height: 400px;
+    height: 300px;
     margin: 20px 0;
     border: 1px solid #ddd;
     padding: 20px;
     background-color: white;
+    overflow:auto;
   }
 
   .bd{
@@ -78,4 +79,11 @@ html, body {
   max-height:150px;
   width: auto;
   height: auto;
+}
+
+strong{
+  color:  rgb(58, 114, 56);
+  font-weight: bold;
+  font-family: Arial;
+
 }
