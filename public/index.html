@@ -2,10 +2,11 @@
 <html lang="en">
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chat</title>
+    <title>Arquivo.io</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
@@ -22,7 +23,8 @@
         </div>
 
         <button id="btn-file" class="btn">Carregar arquivo</button>
-        <input type="file" id="inp-file" name="myfile" onchange='abrirArquivo(event)' />
+        <input type="file" id="inp-file" name="myfile" onchange='contarCaracterArq(event)' />
+        <input type="text" id="text-input" name="usuario" placeholder="Digite seu usuário" >
         <div class="messages" ></div>
         <button type="submit">Enviar</button> 
 
@@ -30,32 +32,66 @@
 
 
     <script type="text/javascript">
-        var socket = io('http://localhost:3000');
-        numCaracter = 0;
+        var socket = io(window.location.host);
+        var numCaracter = 0;
+        var texto = '';
+        var nomeArq = '';
 
-        var abrirArquivo = function (event) {
+        function isLetter(str) {
+            return str.length === 1 && str.match(  /[a-z0-9!#$%&'()*+,-./:;´?@[\\\]_`{|}~]/i  );
+        };
+
+        var contarCaracterArq = function (event) {
+
             var input = event.target;
+             texto = '' ;
+             numCaracter = 0;
+            nomeArq = input.files[0].name;            
 
             var reader = new FileReader();
-
-            function isLetter(str) {
-                return str.length === 1 && str.match(/[a-z0-9!#$%&'()*+,-./:;´?@[\\\]_`{|}~]/i);
-            }
 
             reader.onload = function () {
                 var text = reader.result;
                 for (var i = 0; i < text.length; i++) {
-
                     if (isLetter(text.charAt(i))) {
                         numCaracter++;
                     }
                 }
             };
+            
             reader.readAsText(input.files[0]);
+            if(input.files[0].type == 'text/plain'){//txt                
+                lerArquivoTxt(event);
+
+            } else if(input.files[0].type == 'application/pdf'){//pdf
+                lerArquivoTxt(event);
+            }
+
         };
+    function lerArquivoPdf(evt) {
+        console.log(evt);
+    }
+
+    function lerArquivoTxt(evt){
+    
+    var files = evt.target.files;
+    for (var i = 0, f; f = files[i]; i++){
+        var reader = new FileReader();
+        reader.onload = function(event){
+            var conteudo = event.target.result;
+            var linhas = conteudo.split('\n');
+            for(x=0;x<linhas.length;x++){
+               texto += linhas[x];
+               console.log(linhas[x]);
+               alert(texto);
+            }
+        };
+        reader.readAsText(f);   
+    }
+}
 
         function renderMessage(message) {
-            $('.messages').append('<div class="message"><strong > Caminho até o arquivo: </strong>' + message.nomeDoArquivo + '<br><strong> Número de caracteres: </strong> ' + message.numCaracter + ' </div><br>');
+            $('.messages').append('<div class="message"><strong>Usuário: </strong>' + message.usuario + '<br><strong >Nome do arquivo: </strong>' + message.nomeDoArquivo + '<br><strong> Número de caracteres: </strong> ' + message.numCaracter + '<br><strong> Conteudo: </strong> ' + message.haha + '<br> </div><br>');
 
         }
 
@@ -72,11 +108,13 @@
         $('#tela').submit(function (event) {
             event.preventDefault();
 
-            var nomeDoArquivo = $("#inp-file").val();
+            var usuario = $('input[name=usuario]').val();
               
                 var arquivoObject = {
-                    nomeDoArquivo: nomeDoArquivo,
+                    nomeDoArquivo: nomeArq,
                     numCaracter: numCaracter,
+                    haha: texto,
+                    usuario: usuario
                 };
 
                 renderMessage(arquivoObject);
